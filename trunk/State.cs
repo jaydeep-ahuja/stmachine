@@ -12,6 +12,7 @@ namespace StateMachine
 
         private State(IRule rule)
         {
+            inputBuffer = new List<T>();
             this.rule = rule;
         }
 
@@ -21,7 +22,7 @@ namespace StateMachine
             {
                 return this.rule.Name;
             }
-            set;
+            set { }
         }
         private List<T> inputBuffer;
 
@@ -37,13 +38,11 @@ namespace StateMachine
             inputBuffer.Add(input);
             List<IRule> nextRules 
                 = interpreter.LoadEvent<List<T>>(this.rule
-                                                    , ITransitionEvent.CreateTransitionEvent<List<T>>(inputBuffer)
+                                                    , interpreter.CreateTransitionEvent<List<T>>(inputBuffer)
                                                     , Config<T>.GetInstance().stateMachineInputComparer);
 
-            if (nextRules == null)
-                return null;
-
-            if (nextRules[0].Name == this.Name)
+            if (nextRules.Count == 0
+                    || nextRules[0].Name == this.Name)
                 return this;
 
             return State<T>.Create(nextRules[0]);

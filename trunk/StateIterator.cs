@@ -12,11 +12,23 @@ namespace StateMachine
     {
         private IRuleInterpreter rulesInterpreter;
         private StateMachine.StateMachine<T> stateMachine = null;
+        private IEnumerator<State<T>> iterator;
 
         internal State<T> InitialState
         {
             get {
                 return State<T>.Create(rulesInterpreter.InitialRule);
+            }
+        }
+
+        internal State<T> CurrentState
+        {
+            get {
+
+                if (iterator.Current == null)
+                    return InitialState;
+                else
+                    return iterator.Current;
             }
         }
 
@@ -27,12 +39,21 @@ namespace StateMachine
             rulesInterpreter.LoadRuleFile(filePath);
 
             this.stateMachine = stateMachine;
-            this.Process(null);
+            this.iterator = this.GetEnumerator();
         }
 
-        public IEnumerator<State<T>> Process(T input)
+        public bool Process()
         {
-            yield return this.stateMachine.CurrentState.Process(this.rulesInterpreter, input);
+            return iterator.MoveNext();
+        }
+
+        public IEnumerator<State<T>> GetEnumerator()
+        {
+            State<T> state = null;
+            while ((state = this.CurrentState.Process(this.rulesInterpreter, this.stateMachine.CurrentInput)) != null)
+                yield return state;
+
+            yield return null;
         }
     }
 }

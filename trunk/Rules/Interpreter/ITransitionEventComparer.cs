@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StateMachine.Rules.Interpreter
 {
-    public interface ITransitionEventComparer<T> : IComparer<List<T>>
+    public interface ITransitionEventComparer : IComparer<ITransitionEvent>
     {
         
     }

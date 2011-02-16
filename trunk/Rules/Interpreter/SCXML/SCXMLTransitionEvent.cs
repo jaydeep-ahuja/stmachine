@@ -25,15 +25,10 @@ namespace StateMachine.Rules.Interpreter.SCXML
         }
     }
 
-    internal class SCXMLTransitionEventComparer : ITransitionEventComparer<char>
+    internal class SCXMLTransitionEventComparer : ITransitionEventComparer
     {
-        public int Compare(List<char> x, List<char> y)
+        public int Compare(ITransitionEvent x, ITransitionEvent y)
         {
-            if (x.Count != y.Count) return -1;
-
-            for (int i = 0; i < x.Count; i++)
-                if (x[i] != y[i]) return -1;
-
             return 1;
         }
     }
