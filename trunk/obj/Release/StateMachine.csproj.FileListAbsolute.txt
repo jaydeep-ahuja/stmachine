@@ -1,0 +1,6 @@
+D:\OpenSource\bin\Release\StateMachine.dll
+D:\OpenSource\bin\Release\StateMachine.pdb
+D:\OpenSource\bin\Release\Document.xml
+D:\OpenSource\obj\Release\ResolveAssemblyReference.cache
+D:\OpenSource\obj\Release\StateMachine.dll
+D:\OpenSource\obj\Release\StateMachine.pdb

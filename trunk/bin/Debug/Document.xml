@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StateMachine</name>
+    </assembly>
+    <members>
+        <member name="T:StateMachine.StateMachine`1">
+            <summary>
+            StateMachine class
+            </summary>
+            <typeparam name="T">T specifies the type of input state machine will process</typeparam>
+        </member>
+        <member name="M:StateMachine.StateMachine`1.#ctor(StateMachine.Rules.Interpreter.ITransitionEventComparer)">
+            <summary>
+            <![CDATA[StateMachine<T> constructor]]>
+            </summary>
+            <param name="stateMachineInputComparer"><![CDATA[Custom IComparer<ITransitionEvent> object.
+            User can use this object to define his own custom comparer to match the input with state transition events.]]></param>
+        </member>
+        <member name="M:StateMachine.StateMachine`1.Process(`0)">
+            <summary>
+            Method to process the input.
+            </summary>
+            <param name="input">Input object</param>
+        </member>
+        <member name="M:StateMachine.StateMachine`1.Enter(System.String)">
+            <summary>
+            Method to start the state machine.
+            </summary>
+            <param name="ruleFilePath">Full path of the rule file to load.</param>
+        </member>
+        <member name="M:StateMachine.StateMachine`1.Exit">
+            <summary>
+            Method to exit the state machine.
+            </summary>
+        </member>
+        <member name="M:StateMachine.StateMachine`1.Reset">
+            <summary>
+            Method to again reset the state machine to Initial State.
+            Initial state is read from the rule file.
+            </summary>
+        </member>
+        <member name="P:StateMachine.StateMachine`1.CurrentState">
+            <summary>
+            <![CDATA[Returns the current state. State<T> object.]]>
+            </summary>
+        </member>
+        <member name="P:StateMachine.StateMachine`1.CurrentInput">
+            <summary>
+            <![CDATA[Returns the current input. T object]]>
+            </summary>
+        </member>
+        <member name="T:StateMachine.StateIterator`1">
+            <summary>
+            StateIterator class
+            Used by State Machine to process input and iterate to next states.
+            </summary>
+            <typeparam name="T">T specifies the type of input state machine will process</typeparam>
+        </member>
+        <member name="M:StateMachine.StateIterator`1.#ctor(StateMachine.StateMachine{`0},System.String)">
+            <summary>
+            StateIterator constructor
+            </summary>
+            <param name="stateMachine">Instance of state machine.</param>
+            <param name="filePath">Full path of the rule file.</param>
+        </member>
+        <member name="M:StateMachine.StateIterator`1.Process">
+            <summary>
+            Method to process the input.
+            </summary>
+            <returns>Returns true if input is successfully processed.</returns>
+        </member>
+        <member name="M:StateMachine.StateIterator`1.GetEnumerator">
+            <summary>
+            Method to get the Iterator object.
+            </summary>
+            <returns>Returns the state after processing the Current Input.</returns>
+        </member>
+        <member name="P:StateMachine.StateIterator`1.InitialState">
+            <summary>
+            Initial State of state machine as read from rule file. <![CDATA[State<T> object.]]>
+            </summary>
+        </member>
+        <member name="P:StateMachine.StateIterator`1.CurrentState">
+            <summary>
+            Currennt State of the state machine. <![CDATA[State<T> object.]]>
+            </summary>
+        </member>
+        <member name="T:StateMachine.Config`1">
+            <summary>
+            <![CDATA[Config<T> class.]]> [Singleton class]
+            Used to list objects which would be accessed by other classes while performing the operation.
+            </summary>
+            <typeparam name="T">T specifies the type of input state machine will process</typeparam>
+        </member>
+        <member name="F:StateMachine.Config`1.stateMachineInputComparer">
+            <summary>
+            Custom comparer specified while creating the instance of State Machine
+            </summary>
+        </member>
+        <member name="M:StateMachine.Config`1.GetInstance">
+            <summary>
+            Method to get the instance of the Config class.
+            </summary>
+            <returns><![CDATA[Config<T> object.]]></returns>
+        </member>
+        <member name="T:StateMachine.State`1">
+            <summary>
+            <![CDATA[State<T> entity class]]>
+            State class is used by state machine to represent a rule in rule file and to buffer the input processed by this state.
+            </summary>
+            <typeparam name="T">T specifies the type of input state machine will process</typeparam>
+        </member>
+        <member name="M:StateMachine.State`1.#ctor(StateMachine.Rules.Interpreter.IRule)">
+            <summary>
+            Private State constructor
+            </summary>
+            <param name="rule">Rule object from which to create the state.</param>
+        </member>
+        <member name="F:StateMachine.State`1.inputBuffer">
+            <summary>
+            Buffer of input current state has processed.
+            Used by comparer to compare with events in rule file.
+            </summary>
+        </member>
+        <member name="M:StateMachine.State`1.Create(StateMachine.Rules.Interpreter.IRule)">
+            <summary>
+            Method to create a state of a rule.
+            </summary>
+            <param name="rule">Rule object.</param>
+            <returns>Created State object.</returns>
+        </member>
+        <member name="M:StateMachine.State`1.Process(StateMachine.Rules.Interpreter.IRuleInterpreter,`0)">
+            <summary>
+            Method to process the input.
+            TODO: Currently State Machine on a single match
+            Will need immediate change
+            </summary>
+            <param name="interpreter">Rule Interpreter as provided by dependency injection.</param>
+            <param name="input">Input object to process</param>
+            <returns>Returns the State loaded after processing the input over the rule file.</returns>
+        </member>
+        <member name="P:StateMachine.State`1.Name">
+            <summary>
+            Name of the state as read from the rule
+            </summary>
+        </member>
+        <member name="M:StateMachine.Rules.Interpreter.SCXML.SCXMLInterpreter.LoadRule(StateMachine.Rules.Interpreter.IRule)">
+            <summary>
+            Load a specific rule
+            TODO: Definition is not very clear of this function, will change a lot
+            Currently, it just traverse a rule's transitions and see if it has to go some other rule or not
+            </summary>
+            <param name="rule"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
