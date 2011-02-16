@@ -11,7 +11,7 @@ namespace StateMachine
         private static Config<T> configuration;
         private Config() { }
 
-        public ITransitionEventComparer<T> stateMachineInputComparer;
+        public ITransitionEventComparer stateMachineInputComparer;
 
         public static Config<T> GetInstance()
         {

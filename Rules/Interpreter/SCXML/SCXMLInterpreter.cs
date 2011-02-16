@@ -5,6 +5,8 @@
  * As, internal attributes could only be accessed by SCXML classes
  * 
  * TODO: Look at the way for the Rule Interpreter to work for extremely large files
+ * 
+ * TODO: cannot create the SM for primitive data types
  **/
 
 using System;
@@ -21,21 +23,22 @@ namespace StateMachine.Rules.Interpreter.SCXML
 
         // TODO: Can pick these values from a config file
         private String ruleMatch = "//state[@id='{0}']";
-        private String allTransitionsInARuleMatch = "/transition";
-        private String specificTransitionInARuleBasedOnEventMatch = "/transition[@event={0}]";
+        private String allTransitionsInARuleMatch = "transition";
+        private String specificTransitionInARuleBasedOnEventMatch = "transition[@event={0}]";
 
         private ITransitionEventComparer scxmlTransitionEventComparer;
 
         public SCXMLInterpreter()
         {
             scxmlTransitionEventComparer = new SCXMLTransitionEventComparer();
+            rulesDoc = new XmlDocument();
         }
 
         public IRule InitialRule
         {
             get
             {
-                string initialRuleName = rulesDoc.FirstChild.Attributes["inititalState"].Value;
+                string initialRuleName = rulesDoc.FirstChild.Attributes["initialstate"].Value;
                 return PrepareRule(initialRuleName);
             }
         }
@@ -57,7 +60,7 @@ namespace StateMachine.Rules.Interpreter.SCXML
                 rule.Transitions.Add(new SCXMLTransition
                 {
                     TargetRuleName = transition.Attributes["target"].Value,
-                    Event = new SCXMLTransitionEvent { eventData = transition.Attributes["event"].Value }
+                    Event = new SCXMLTransitionEvent { eventData = transition.Attributes["event"] == null ? null : transition.Attributes["event"].Value }
                 });
             }
 
@@ -121,7 +124,12 @@ namespace StateMachine.Rules.Interpreter.SCXML
 
         public void LoadRuleFile(string filePath)
         {
-            rulesDoc.LoadXml(filePath);
+            rulesDoc.Load(filePath);
+        }
+
+        public ITransitionEvent CreateTransitionEvent<T>(T eventData)
+        {
+            return new SCXMLTransitionEvent { eventData = eventData };
         }
     }
 }

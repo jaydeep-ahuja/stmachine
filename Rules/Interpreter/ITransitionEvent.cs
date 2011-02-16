@@ -8,6 +8,5 @@ namespace StateMachine.Rules.Interpreter
     public interface ITransitionEvent
     {
         T GetEventData<T>();
-        static ITransitionEvent CreateTransitionEvent<T>(T data);
     }
 }

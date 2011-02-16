@@ -7,15 +7,21 @@ namespace StateMachine.Rules.Interpreter.SCXML
 {
     public class SCXMLRule : IRule
     {
+        private string _name;
         public string Name
         {
-            get;
-            internal set { }
+            get { return _name; }
+            internal set { _name = value; }
         }
 
+        private List<ITransition> _transitions;
         public List<ITransition> Transitions
         {
-            get;
+            get
+            {
+                if (_transitions == null) _transitions = new List<ITransition>();
+                return _transitions;
+            }
         }
     }
 }

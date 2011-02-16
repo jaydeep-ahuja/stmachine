@@ -21,43 +21,41 @@ namespace StateMachine
     public class StateMachine<T> where T : class
     {
         private StateIterator<T> stateIterator;
-        private IEnumerator<State<T>> iterator;
 
-        public StateMachine(ITransitionEventComparer<T> stateMachineInputComparer)
+        public StateMachine(ITransitionEventComparer stateMachineInputComparer)
         {
             Config<T>.GetInstance().stateMachineInputComparer = stateMachineInputComparer;
         }
 
         public State<T> CurrentState
         {
-            get {
-
-                if (iterator.Current == null)
-                    return stateIterator.InitialState;
-                return iterator.Current;
+            get
+            {
+                return stateIterator.CurrentState;
             }
+        }
+
+        public T CurrentInput
+        {
+            get;
+            set;
         }
 
         public void Process(T input)
         {
-            if (iterator == null)
-                iterator = stateIterator.Process(input);
-            else
-                stateIterator.Process(input);
+            CurrentInput = input;
+            stateIterator.Process();
         }
 
         public void Enter(String ruleFilePath)
         {
-            if (iterator == null) {
-
-                stateIterator = new StateIterator<T>(this, ruleFilePath);
-                this.Process(null);
-            }
+            stateIterator = new StateIterator<T>(this, ruleFilePath);
+            this.Process(null);
         }
 
         public void Exit()
         {
-            
+
         }
 
         public void Reset()

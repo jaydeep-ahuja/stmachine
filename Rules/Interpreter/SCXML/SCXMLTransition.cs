@@ -7,16 +7,18 @@ namespace StateMachine.Rules.Interpreter.SCXML
 {
     public class SCXMLTransition : ITransition
     {
+        private String _targetRuleName;
         public string TargetRuleName
         {
-            get;
-            internal set { }
+            get { return _targetRuleName; }
+            internal set { _targetRuleName = value; }
         }
 
+        private ITransitionEvent _event;
         public ITransitionEvent Event
         {
-            get;
-            internal set { }
+            get { return _event; }
+            internal set { _event = value; }
         }
     }
 }
