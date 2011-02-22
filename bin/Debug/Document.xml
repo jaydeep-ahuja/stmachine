@@ -10,7 +10,7 @@
             </summary>
             <typeparam name="T">T specifies the type of input state machine will process</typeparam>
         </member>
-        <member name="M:StateMachine.StateMachine`1.#ctor(StateMachine.Rules.Interpreter.ITransitionEventComparer)">
+        <member name="M:StateMachine.StateMachine`1.#ctor(StateMachine.Rules.Interpreter.ITransitionEventComparer,StateMachine.IOnStateChanged)">
             <summary>
             <![CDATA[StateMachine<T> constructor]]>
             </summary>
