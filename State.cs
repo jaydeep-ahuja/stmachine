@@ -41,7 +41,7 @@ namespace StateMachine
         /// Buffer of input current state has processed.
         /// Used by comparer to compare with events in rule file.
         /// </summary>
-        private List<T> inputBuffer;
+        internal List<T> inputBuffer;
 
         /// <summary>
         /// Method to create a state of a rule.

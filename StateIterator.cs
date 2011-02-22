@@ -16,7 +16,7 @@ namespace StateMachine
     internal class StateIterator<T> where T : class
     {
         private IRuleInterpreter rulesInterpreter;
-        private StateMachine.StateMachine<T> stateMachine = null;
+        internal StateMachine.StateMachine<T> stateMachine = null;
         private IEnumerator<State<T>> iterator;
 
         /// <summary>
@@ -53,6 +53,7 @@ namespace StateMachine
             // TODO: Use Factory Pattern to generate this interpreter instance
             rulesInterpreter = new SCXMLInterpreter();
             rulesInterpreter.LoadRuleFile(filePath);
+            rulesInterpreter.OnEvent(new OnDataEvent(this));
 
             this.stateMachine = stateMachine;
             this.iterator = this.GetEnumerator();
@@ -78,6 +79,29 @@ namespace StateMachine
                 yield return state;
 
             yield return null;
+        }
+
+        private class OnDataEvent : IOnEvent
+        {
+            StateIterator<T> stateIterator;
+
+            public OnDataEvent(StateIterator<T> stateIterator)
+            {
+                this.stateIterator = stateIterator;
+            }
+
+            public void OnEvent(IEvent eventObject)
+            {
+                switch (eventObject.Context.ToString())
+                {
+                    case "buffer":
+                        eventObject.Context = this.stateIterator.CurrentState.inputBuffer;
+                        break;
+                }
+
+                if (stateIterator.stateMachine.eventCallback != null)
+                    stateIterator.stateMachine.eventCallback.OnEvent(eventObject);
+            }
         }
     }
 }

@@ -9,5 +9,6 @@ namespace StateMachine.Rules.Interpreter
     {
         String TargetRuleName { get; }
         ITransitionEvent Event { get; }
+        List<IEvent> DataEvents { get; }
     }
 }
