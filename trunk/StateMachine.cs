@@ -26,14 +26,18 @@ namespace StateMachine
     {
         private StateIterator<T> stateIterator;
 
+        internal IOnEvent eventCallback;
+        internal IOnStateChanged stateChangedCallback;
+
         /// <summary>
         /// <![CDATA[StateMachine<T> constructor]]>
         /// </summary>
         /// <param name="stateMachineInputComparer"><![CDATA[Custom IComparer<ITransitionEvent> object.
         /// User can use this object to define his own custom comparer to match the input with state transition events.]]></param>
-        public StateMachine(ITransitionEventComparer stateMachineInputComparer)
+        public StateMachine(ITransitionEventComparer stateMachineInputComparer, IOnStateChanged stateChangedCallback)
         {
             Config<T>.GetInstance().stateMachineInputComparer = stateMachineInputComparer;
+            this.stateChangedCallback = stateChangedCallback;
         }
 
         /// <summary>
@@ -47,6 +51,19 @@ namespace StateMachine
             }
         }
 
+        private State<T> _previousState = null;
+        public State<T> PreviousState
+        {
+            get
+            {
+                return _previousState;
+            }
+            private set
+            {
+                _previousState = value;
+            }
+        }
+
         /// <summary>
         /// <![CDATA[Returns the current input. T object]]>
         /// </summary>
@@ -56,6 +73,11 @@ namespace StateMachine
             set;
         }
 
+        public void OnEvent(IOnEvent callback)
+        {
+            this.eventCallback = callback;
+        }
+
         /// <summary>
         /// Method to process the input.
         /// </summary>
@@ -63,7 +85,12 @@ namespace StateMachine
         public void Process(T input)
         {
             CurrentInput = input;
+            PreviousState = CurrentState;
             stateIterator.Process();
+
+            if (PreviousState != CurrentState)
+                if (this.stateChangedCallback != null)
+                    this.stateChangedCallback.OnStateChanged<T>(PreviousState, CurrentState);
         }
 
         /// <summary>

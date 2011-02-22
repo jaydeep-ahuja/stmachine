@@ -44,11 +44,15 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="IStateMachineInputComparer.cs" />
+    <Compile Include="Rules\Interpreter\IEvent.cs" />
+    <Compile Include="Rules\Interpreter\IOnEvent.cs" />
+    <Compile Include="IOnStateChanged.cs" />
     <Compile Include="Rules\Interpreter\IRule.cs" />
     <Compile Include="Rules\Interpreter\IRuleInterpreter.cs" />
     <Compile Include="Rules\Interpreter\ITransition.cs" />
     <Compile Include="Rules\Interpreter\ITransitionEvent.cs" />
     <Compile Include="Rules\Interpreter\ITransitionEventComparer.cs" />
+    <Compile Include="Rules\Interpreter\SCXML\SCXMLDataEvent.cs" />
     <Compile Include="Rules\Interpreter\SCXML\SCXMLInterpreter.cs" />
     <Compile Include="Rules\Interpreter\SCXML\SCXMLRule.cs" />
     <Compile Include="Rules\Interpreter\SCXML\SCXMLTransition.cs" />

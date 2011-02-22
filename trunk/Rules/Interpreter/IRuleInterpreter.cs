@@ -14,6 +14,8 @@ namespace StateMachine.Rules.Interpreter
         List<IRule> LoadEvent<T>(IRule rule, ITransitionEvent data, ITransitionEventComparer comparer);
         void LoadRuleFile(string filePath);
 
+        void OnEvent(IOnEvent callback);
+
         ITransitionEvent CreateTransitionEvent<T>(T eventData);
     }
 }

@@ -25,8 +25,11 @@ namespace StateMachine.Rules.Interpreter.SCXML
         private String ruleMatch = "//state[@id='{0}']";
         private String allTransitionsInARuleMatch = "transition";
         private String specificTransitionInARuleBasedOnEventMatch = "transition[@event={0}]";
+        private String dataEventMatch = "transition[@event={0}]";
+        private String allDataEventsInATagMatch = "send";
 
         private ITransitionEventComparer scxmlTransitionEventComparer;
+        private IOnEvent callback;
 
         public SCXMLInterpreter()
         {
@@ -57,10 +60,30 @@ namespace StateMachine.Rules.Interpreter.SCXML
 
             foreach (XmlNode transition in node.SelectNodes(allTransitionsInARuleMatch))
             {
-                rule.Transitions.Add(new SCXMLTransition
+                SCXMLTransition scxmlTransition = new SCXMLTransition
                 {
                     TargetRuleName = transition.Attributes["target"].Value,
                     Event = new SCXMLTransitionEvent { eventData = transition.Attributes["event"] == null ? null : transition.Attributes["event"].Value }
+                                                    };
+
+                foreach (XmlNode dataEvent in transition.SelectNodes(allDataEventsInATagMatch))
+                {
+                    scxmlTransition.DataEvents.Add(new SCXMLDataEvent
+                    {
+                        Name = dataEvent.Attributes["event"].Value,
+                        Context = dataEvent.Attributes["context"] == null ? null : dataEvent.Attributes["context"].Value
+                    });
+                }
+
+                rule.Transitions.Add(scxmlTransition);
+            }
+
+            foreach (XmlNode dataEvent in node.SelectNodes(allDataEventsInATagMatch))
+            {
+                rule.DataEvents.Add(new SCXMLDataEvent
+                {
+                    Name = dataEvent.Attributes["event"].Value,
+                    Context = dataEvent.Attributes["context"] == null ? null : dataEvent.Attributes["context"].Value
                 });
             }
 
@@ -90,18 +113,49 @@ namespace StateMachine.Rules.Interpreter.SCXML
             Stack<IRule> ruleStack = new Stack<IRule>();
 
             ruleStack.Push(rule);
+            int count = 0;
             while (ruleStack.Count > 0)
             {
                 rule = ruleStack.Pop();
                 foreach (SCXMLTransition transition in rule.Transitions)
                 {
-                    if (comparer.Compare(transition.Event, data) > -1)
+                    if ((count == 0  && comparer.Compare(transition.Event, data) > -1)
+                         || transition.Event == null)
                     {
                         SCXMLRule nextRule = PrepareRule(transition.TargetRuleName);
                         nextRules.Add(nextRule);
                         ruleStack.Push(nextRule);
+
+                        if (callback != null)
+                        {
+                            foreach (SCXMLDataEvent dataEvent in transition.DataEvents)
+                            {
+                                if (!dataEvent.IsTriggered)
+                                {
+                                    callback.OnEvent(dataEvent);
+                                    dataEvent.IsTriggered = true;
+                                }
+                            }
+                        }
+
+                        // TODO: Uncomment this to suppport NFA
+                        break;
                     }
                 }
+
+                if (callback != null)
+                {
+                    foreach (SCXMLDataEvent dataEvent in rule.DataEvents)
+                    {
+                        if (!dataEvent.IsTriggered)
+                        {
+                            callback.OnEvent(dataEvent);
+                            dataEvent.IsTriggered = true;
+                    }
+                }
+            }
+
+                count++;
             }
 
             return nextRules;
@@ -125,6 +179,11 @@ namespace StateMachine.Rules.Interpreter.SCXML
         public void LoadRuleFile(string filePath)
         {
             rulesDoc.Load(filePath);
+        }
+
+        public void OnEvent(IOnEvent callback)
+        {
+            this.callback = callback;
         }
 
         public ITransitionEvent CreateTransitionEvent<T>(T eventData)

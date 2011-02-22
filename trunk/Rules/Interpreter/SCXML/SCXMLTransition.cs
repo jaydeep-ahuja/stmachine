@@ -20,5 +20,15 @@ namespace StateMachine.Rules.Interpreter.SCXML
             get { return _event; }
             internal set { _event = value; }
         }
+
+        private List<IEvent> _dataEvents;
+        public List<IEvent> DataEvents
+        {
+            get
+            {
+                if (_dataEvents == null) _dataEvents = new List<IEvent>();
+                return _dataEvents;
+            }
+        }
     }
 }
