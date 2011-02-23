@@ -1,4 +1,4 @@
-﻿/*
+ /*
  * SCXML Interpreter
  * 
  * TODO: Put the SCXML Interpreter in seperate assembly
@@ -138,7 +138,7 @@ namespace StateMachine.Rules.Interpreter.SCXML
                             }
                         }
 
-                        // TODO: Uncomment this to suppport NFA
+                        // TODO: Comment break to suppport NFA
                         break;
                     }
                 }
