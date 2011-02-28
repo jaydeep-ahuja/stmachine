@@ -92,11 +92,11 @@ namespace StateMachine
 
             public void OnEvent(IEvent eventObject)
             {
-                switch (eventObject.Context.ToString())
+                eventObject.DataExpression = eventObject.Context.ToString();
+
+                if (eventObject.Context.ToString().IndexOf("{0}") != -1)
                 {
-                    case "buffer":
                         eventObject.Context = this.stateIterator.CurrentState.inputBuffer;
-                        break;
                 }
 
                 if (stateIterator.stateMachine.eventCallback != null)
