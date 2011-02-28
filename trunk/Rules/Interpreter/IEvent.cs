@@ -9,6 +9,7 @@ namespace StateMachine.Rules.Interpreter
     {
         String Name { get; set; }
         Object Context { get; set; }
+        String DataExpression { get; set; }
         Boolean IsTriggered { get; set; }
     }
 }

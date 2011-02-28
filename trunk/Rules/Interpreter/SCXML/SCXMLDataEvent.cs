@@ -33,6 +33,19 @@ namespace StateMachine.Rules.Interpreter.SCXML
             }
         }
 
+        private string _dataExpression;
+        public String DataExpression
+        {
+            get
+            {
+                return _dataExpression;
+            }
+            set
+            {
+                _dataExpression = value;
+            }
+        }
+
         private bool _isTriggred = false;
         public bool IsTriggered
         {
